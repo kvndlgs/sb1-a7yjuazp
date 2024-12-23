@@ -116,7 +116,7 @@ function App() {
   const config = DIFFICULTY_CONFIG[gameState.difficulty];
 
   return (
-    <div className="min-h-screen bg-[hsla(256,13%,23%,100%)] text-white p-8">
+    <div className="min-h-screen bg-neutral-700 text-white p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex justify-between items-start">
           <div className="space-y-4">
