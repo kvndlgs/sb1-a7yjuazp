@@ -1,13 +1,12 @@
-export type Difficulty = 'easy' | 'medium' | 'hard';
+export type DifficultyLevel = 'classic' | 'low' | 'medium' | 'high';
 
-export interface GameConfig {
+export interface DifficultyConfig {
   maxPicks: number;
-  winProbability: number;
-  payoutMultiplier: number;
+  description: string;
 }
 
 export interface GameState {
-  difficulty: Difficulty;
+  difficulty: DifficultyLevel;
   selectedNumbers: number[];
   drawnNumbers: number[];
   credits: number;

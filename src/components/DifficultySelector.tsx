@@ -4,17 +4,18 @@ import { Difficulty } from '../types/game';
 interface DifficultySelectorProps {
   selectedDifficulty: Difficulty;
   onSelect: (difficulty: Difficulty) => void;
-  disabled: boolean;
+//  disabled: boolean;
 }
 
 const DifficultySelector: React.FC<DifficultySelectorProps> = ({
   selectedDifficulty,
   onSelect,
-  disabled,
+//  disabled,
 }) => {
-  const difficulties: Difficulty[] = ['easy', 'medium', 'hard'];
+  const difficulties: Difficulty[] = ['classic', 'medium', 'high'];
 
   return (
+    /*
     <div className="flex gap-4 mb-6">
       {difficulties.map((difficulty) => (
         <button
@@ -29,8 +30,20 @@ const DifficultySelector: React.FC<DifficultySelectorProps> = ({
         >
           {difficulty}
         </button>
+      
       ))}
-    </div>
+      </div>
+      */
+      <div>
+        <select name='difficulty'>
+          <option value=''>{selectedDifficulty}</option>
+          {
+            difficulties.map((difficulty) => (
+              <option key={difficulty} value={difficulty} onClick={() => onSelect(difficulty)}> {difficulty}</option>
+            ))
+          }
+        </select>
+      </div>
   );
 };
 

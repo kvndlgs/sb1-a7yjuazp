@@ -1,20 +1,18 @@
 import React, { useState, useCallback } from 'react';
 import { Play, RefreshCw } from 'lucide-react';
-import { Difficulty, GameState } from './types/game';
-import {
-  DIFFICULTY_CONFIG,
-  INITIAL_CREDITS,
-  GAME_COST,
-  TOTAL_NUMBERS,
-} from './config/gameConfig';
+import { DifficultyLevel, GameState } from './types/game';
+import { DIFFICULTY_CONFIG } from './config/difficultyConfig';
+import { INITIAL_CREDITS, GAME_COST, DRAWN_NUMBERS } from './config/constants';
 import Grid from './components/Grid';
 import DifficultySelector from './components/DifficultySelector';
-// import PayoutTable from './components/PayoutTable';
+import { PayoutTable } from './components/PayoutTable';
 import { useAudio } from './hooks/useAudio';
+import { calculatePayout } from './utils/payoutCalculator';
 
-function App() {
+
+const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>({
-    difficulty: 'medium',
+    difficulty: 'classic',
     selectedNumbers: [],
     drawnNumbers: [],
     credits: INITIAL_CREDITS,
@@ -24,7 +22,7 @@ function App() {
 
   const { playSound } = useAudio();
 
-  const handleDifficultyChange = (difficulty: Difficulty) => {
+  const handleDifficultyChange = (difficulty: DifficultyLevel) => {
     setGameState((prev) => ({
       ...prev,
       difficulty,
@@ -59,19 +57,11 @@ function App() {
 
   const generateDrawnNumbers = useCallback(() => {
     const numbers = new Set<number>();
-    while (numbers.size < 20) {
-      numbers.add(Math.floor(Math.random() * TOTAL_NUMBERS) + 1);
+    while (numbers.size < DRAWN_NUMBERS) {
+      numbers.add(Math.floor(Math.random() * 40) + 1);
     }
     return Array.from(numbers);
   }, []);
-
-  const calculateWinnings = useCallback(
-    (matches: number, difficulty: Difficulty) => {
-      const { payoutMultiplier } = DIFFICULTY_CONFIG[difficulty];
-      return Math.floor(matches * payoutMultiplier * GAME_COST);
-    },
-    []
-  );
 
   const handlePlay = () => {
     if (gameState.credits < GAME_COST) return;
@@ -86,7 +76,12 @@ function App() {
     const matches = gameState.selectedNumbers.filter((n) =>
       drawnNumbers.includes(n)
     ).length;
-    const winnings = calculateWinnings(matches, gameState.difficulty);
+    
+    const winnings = calculatePayout(
+      gameState.selectedNumbers.length,
+      matches,
+      gameState.difficulty
+    );
 
     setTimeout(() => {
       setGameState((prev) => {
@@ -116,7 +111,7 @@ function App() {
   const config = DIFFICULTY_CONFIG[gameState.difficulty];
 
   return (
-    <div className="min-h-screen bg-neutral-700 text-white p-8">
+    <div className="min-h-screen bg-[hsla(256,13%,23%,100%)] text-white p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex justify-between items-start">
           <div className="space-y-4">
@@ -126,15 +121,12 @@ function App() {
               disabled={gameState.isPlaying}
             />
             <div className="space-y-2">
-              <p className="text-lg">Credits: {gameState.credits}</p>
+              <p className="text-lg">Balance {gameState.credits}</p>
               <p>
                 Picks: {gameState.selectedNumbers.length}/{config.maxPicks}
               </p>
             </div>
           </div>
-          {/*
-          <PayoutTable difficulty={gameState.difficulty} />
-          */}
         </div>
 
         <Grid
@@ -144,7 +136,19 @@ function App() {
           disabled={gameState.isPlaying}
           maxPicks={config.maxPicks}
         />
-
+        <div>
+        <PayoutTable
+            difficulty={gameState.difficulty}
+            selectedCount={gameState.selectedNumbers.length}
+            matchCount={
+              gameState.drawnNumbers.length > 0
+                ? gameState.selectedNumbers.filter((n) =>
+                    gameState.drawnNumbers.includes(n)
+                  ).length
+                : undefined
+            }
+          />
+        </div>
         <div className="flex justify-center gap-4">
           <button
             className={`px-6 py-2 rounded-lg font-semibold flex items-center gap-2
@@ -176,15 +180,15 @@ function App() {
         {gameState.gameResult && (
           <div className="text-center text-xl font-semibold">
             {gameState.gameResult === 'won' ? (
-              <p className="text-green-400">You won!</p>
+              <p className="text-green-400">Won!</p>
             ) : (
-              <p className="text-red-400">Better luck next time!</p>
+              <p className="text-red-400">Lost!</p>
             )}
           </div>
         )}
       </div>
     </div>
   );
-}
+};
 
 export default App;

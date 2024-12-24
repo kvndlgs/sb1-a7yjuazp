@@ -4,8 +4,9 @@ export const TOTAL_NUMBERS = 40;
 export const INITIAL_CREDITS = 1000;
 export const GAME_COST = 10;
 
+
 export const DIFFICULTY_CONFIG: Record<Difficulty, GameConfig> = {
-  easy: {
+  classic: {
     maxPicks: 10,
     winProbability: 0.4,
     payoutMultiplier: 1.5,
@@ -15,7 +16,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, GameConfig> = {
     winProbability: 0.3,
     payoutMultiplier: 2,
   },
-  hard: {
+  high: {
     maxPicks: 10,
     winProbability: 0.2,
     payoutMultiplier: 3,
