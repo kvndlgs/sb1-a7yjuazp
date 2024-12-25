@@ -34,8 +34,8 @@ const DifficultySelector: React.FC<DifficultySelectorProps> = ({
       ))}
       </div>
       */
-      <div>
-        <select name='difficulty'>
+      <div className='grid p-4'>
+        <select name='difficulty' className='appearance-none row-start-1 col-start-1 sm:py-2 sm:px-2 py-[5px]  rounded-sm bg-mauve text-mauve-500 drop-shadow-mauve text-center border-1 sm:border-2 border-mauve-500 text-mauve-500 focus-none outline-none active-none cursor-pointer'>
           <option value=''>{selectedDifficulty}</option>
           {
             difficulties.map((difficulty) => (

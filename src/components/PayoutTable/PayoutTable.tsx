@@ -2,7 +2,6 @@ import React from 'react';
 import { DifficultyLevel } from '../../types/game';
 import { PAYOUT_TABLES } from '../../config/payoutTables';
 import { PayoutRow } from './PayoutRow';
-import { CurrentWinnings } from './CurrentWinnings';
 
 interface PayoutTableProps {
   difficulty: DifficultyLevel;
@@ -21,12 +20,11 @@ export const PayoutTable: React.FC<PayoutTableProps> = ({
     : [];
 
   return (
-    <div className="w-full flex-row flex-start bg-neutral-700 p-4 rounded-lg shadow-lg">
-      <h3 className="text-white font-semibold mb-3">Payouts</h3>
+    <div className="w-full h-auto flex-start bg-neutral-700 p-4 rounded-full shadow-lg">
+
       
       {selectedCount === 0 ? (
-        <p className="text-white/70 text-sm">Select numbers to see potential payouts</p>
-      ) : (
+      <></>      ) : (
         <div className="flex items-center justify-around">
           {payoutTable.map((multiplier, index) => (
             multiplier > 0 && (
@@ -39,14 +37,6 @@ export const PayoutTable: React.FC<PayoutTableProps> = ({
             )
           ))}
         </div>
-      )}
-
-      {matchCount !== undefined && selectedCount > 0 && (
-        <CurrentWinnings
-          selectedCount={selectedCount}
-          matchCount={matchCount}
-          difficulty={difficulty}
-        />
       )}
     </div>
   );

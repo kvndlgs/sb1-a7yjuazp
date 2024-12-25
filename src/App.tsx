@@ -8,11 +8,12 @@ import DifficultySelector from './components/DifficultySelector';
 import { PayoutTable } from './components/PayoutTable';
 import { useAudio } from './hooks/useAudio';
 import { calculatePayout } from './utils/payoutCalculator';
-
+import NavigationBar from './components/NavigationBar';
+import Header from './components/Header';
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>({
-    difficulty: 'classic',
+    difficulty: 'medium',
     selectedNumbers: [],
     drawnNumbers: [],
     credits: INITIAL_CREDITS,
@@ -111,14 +112,15 @@ const App: React.FC = () => {
   const config = DIFFICULTY_CONFIG[gameState.difficulty];
 
   return (
-    <div className="min-h-screen bg-[hsla(256,13%,23%,100%)] text-white p-8">
+    <div className="min-h-screen min-w-screen m-0 bg-[#373342] text-white">
+      <Header />
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="flex justify-between items-start">
           <div className="space-y-4">
             <DifficultySelector
               selectedDifficulty={gameState.difficulty}
               onSelect={handleDifficultyChange}
-              disabled={gameState.isPlaying}
+      //        disabled={gameState.isPlaying}
             />
             <div className="space-y-2">
               <p className="text-lg">Balance {gameState.credits}</p>
@@ -187,6 +189,7 @@ const App: React.FC = () => {
           </div>
         )}
       </div>
+      <NavigationBar />
     </div>
   );
 };
