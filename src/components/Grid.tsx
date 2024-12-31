@@ -22,7 +22,7 @@ const Grid: React.FC<GridProps> = ({
   );
 
   return (
-    <div className="grid gap-3 mx-auto max-w-[80%] p-4">
+    <div className="grid mx-auto gap-3 mx-auto max-w-4xl p-4">
       {rows.map((row, rowIndex) => (
         <div key={rowIndex} className="flex gap-2 justify-center">
           {row.map((number) => (

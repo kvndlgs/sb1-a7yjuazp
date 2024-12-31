@@ -1,15 +1,15 @@
 import React, { useState, useCallback } from 'react';
-import { Play, RefreshCw } from 'lucide-react';
 import { DifficultyLevel, GameState } from './types/game';
 import { DIFFICULTY_CONFIG } from './config/difficultyConfig';
 import { INITIAL_CREDITS, GAME_COST, DRAWN_NUMBERS } from './config/constants';
 import Grid from './components/Grid';
 import DifficultySelector from './components/DifficultySelector';
-import { PayoutTable } from './components/PayoutTable';
+// import { PayoutTable } from './components/PayoutTable';
 import { useAudio } from './hooks/useAudio';
 import { calculatePayout } from './utils/payoutCalculator';
 import NavigationBar from './components/NavigationBar';
 import Header from './components/Header';
+import { BetHistoryTable } from './components/BetTable';
 
 const App: React.FC = () => {
   const [gameState, setGameState] = useState<GameState>({
@@ -114,7 +114,8 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen min-w-screen m-0 bg-[#373342] text-white">
       <Header />
-      <div className="max-w-4xl mx-auto space-y-8">
+      <div className='flex flex-col'>
+      <div className="max-w-4xl mx-auto space-y-2">
         <div className="flex justify-between items-start">
           <div className="space-y-4">
             <DifficultySelector
@@ -123,14 +124,14 @@ const App: React.FC = () => {
       //        disabled={gameState.isPlaying}
             />
             <div className="space-y-2">
-              <p className="text-lg">Balance {gameState.credits}</p>
+    
               <p>
                 Picks: {gameState.selectedNumbers.length}/{config.maxPicks}
               </p>
             </div>
           </div>
+        
         </div>
-
         <Grid
           selectedNumbers={gameState.selectedNumbers}
           drawnNumbers={gameState.drawnNumbers}
@@ -139,6 +140,7 @@ const App: React.FC = () => {
           maxPicks={config.maxPicks}
         />
         <div>
+          {/*
         <PayoutTable
             difficulty={gameState.difficulty}
             selectedCount={gameState.selectedNumbers.length}
@@ -150,10 +152,18 @@ const App: React.FC = () => {
                 : undefined
             }
           />
+          */}
         </div>
         <div className="flex justify-center gap-4">
+       
+       <div className='flex flex-col'>
+        <label> Bet </label>
+        <div className='inline-flex items-center justify-around'>
+        <input type='text' value={`${GAME_COST} ETH`} className='bg-mauve-300 text-mauve-700 rounded-lg drop-shadow-mauve font-bold pl-2 py-2' />
+        </div>
+        </div>  
           <button
-            className={`px-6 py-2 rounded-lg font-semibold flex items-center gap-2
+            className={`px-6 py-2 rounded-lg font-semibold bg-mauve-500 drop-shadow-mauve
               ${
                 gameState.selectedNumbers.length > 0 && !gameState.isPlaying
                   ? 'bg-[hsla(256,67%,70%,100%)] hover:bg-[hsla(256,67%,70%,90%)]'
@@ -166,20 +176,18 @@ const App: React.FC = () => {
               gameState.credits < GAME_COST
             }
           >
-            <Play size={20} />
-            Play ({GAME_COST} credits)
+            DRAW 
           </button>
           <button
             className="px-6 py-2 rounded-lg font-semibold flex items-center gap-2 bg-[hsla(256,13%,23%,100%)] hover:bg-[hsla(256,13%,28%,100%)]"
             onClick={handleReset}
             disabled={gameState.isPlaying}
           >
-            <RefreshCw size={20} />
             Clear
           </button>
         </div>
 
-        {gameState.gameResult && (
+        {/*gameState.gameResult && (
           <div className="text-center text-xl font-semibold">
             {gameState.gameResult === 'won' ? (
               <p className="text-green-400">Won!</p>
@@ -187,8 +195,13 @@ const App: React.FC = () => {
               <p className="text-red-400">Lost!</p>
             )}
           </div>
-        )}
+        )*/}
+
+      
       </div>
+      <BetHistoryTable />
+      </div>
+
       <NavigationBar />
     </div>
   );

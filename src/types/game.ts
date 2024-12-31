@@ -5,6 +5,19 @@ export interface DifficultyConfig {
   description: string;
 }
 
+export interface BetHistory {
+  id: string;
+  timestamp: string;
+  user: string;
+  coin: string;
+  payout: number;
+  profit: number;
+  allBets: [];
+  userBets: [];
+  highRolls: [];
+}
+
+
 export interface GameState {
   difficulty: DifficultyLevel;
   selectedNumbers: number[];
@@ -12,6 +25,8 @@ export interface GameState {
   credits: number;
   isPlaying: boolean;
   gameResult: 'won' | 'lost' | null;
+  bet: number;
+  balance: number;
 }
 
 export interface CellProps {
