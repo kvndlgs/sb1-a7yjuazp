@@ -1,11 +1,21 @@
 // import React from 'react';
 import { Wallet } from 'lucide-react';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
 import { INITIAL_CREDITS } from '../config/constants';
 
 
 export const Balance = () => {
     return (
-        <div className='bg-white W-12 rounded-xl flex items-center justify-around'>
+        <div className='flex w-full max-w-sm items-center space-x-2'>
+            <Input 
+              readOnly
+              value={INITIAL_CREDITS}
+            />
+            <Button>
+                <Wallet />
+            </Button>
+            {/*
         <span className='bg-mauve-500 text-white p-3.5 rounded-tl-lg rounded-bl-lg'>
             <Wallet />
         </span>
@@ -21,6 +31,7 @@ export const Balance = () => {
             </svg>
 
         </span>
+            */}
     </div>
     )
 }

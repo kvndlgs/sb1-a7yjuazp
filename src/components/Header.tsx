@@ -1,17 +1,18 @@
 import Logo from './Logo';
-import { User } from 'lucide-react';
-import { Balance } from './Balance'
+import { Balance } from './Balance';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 
 export default function Header() {
     return (
         <div className='bg-[#4B455C] w-full h-[80px] flex justify-between items-center z-50 px-2 shadow-lg'>
-
-
             <Logo />
            <Balance />
             <div>
                 <button className='p-3 bg-mauve-500 rounded-full flex text-white mr-2 shadow-sm'>
-                    <User />
+                    <Avatar>
+                     <AvatarImage src='../default-avatar.png' alt='@struggle' /> 
+                     <AvatarFallback>ST</AvatarFallback>
+                    </Avatar>
                 </button>
             </div>
             {/*
