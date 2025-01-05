@@ -4,14 +4,17 @@ import { DIFFICULTY_CONFIG } from './config/difficultyConfig';
 import { INITIAL_CREDITS, GAME_COST, DRAWN_NUMBERS } from './config/constants';
 import Grid from './components/Grid';
 import DifficultySelector from './components/DifficultySelector';
+// import { supabase } from '@supabase/supabase-js';
 // import { PayoutTable } from './components/PayoutTable';
 import { useAudio } from './hooks/useAudio';
 import { calculatePayout } from './utils/payoutCalculator';
 import NavigationBar from './components/NavigationBar';
 import Header from './components/Header';
 import { BetHistoryTable } from './components/BetTable';
+import { AuthProvider } from './components/AuthProvider';
 
 const App: React.FC = () => {
+
   const [gameState, setGameState] = useState<GameState>({
     difficulty: 'medium',
     selectedNumbers: [],
@@ -22,7 +25,7 @@ const App: React.FC = () => {
   });
 
   const { playSound } = useAudio();
-
+ 
   const handleDifficultyChange = (difficulty: DifficultyLevel) => {
     setGameState((prev) => ({
       ...prev,
@@ -109,9 +112,12 @@ const App: React.FC = () => {
     }));
   };
 
+
+
   const config = DIFFICULTY_CONFIG[gameState.difficulty];
 
   return (
+    <AuthProvider>
     <div className="min-h-screen min-w-screen m-0 bg-[#373342] text-white">
       <Header />
       <div className='flex flex-col'>
@@ -159,7 +165,12 @@ const App: React.FC = () => {
        <div className='flex flex-col'>
         <label> Bet </label>
         <div className='inline-flex items-center justify-around'>
+          <input
+
+          />
+          {/*
         <input type='text' value={`${GAME_COST} ETH`} className='bg-mauve-300 text-mauve-700 rounded-lg drop-shadow-mauve font-bold pl-2 py-2' />
+       */}
         </div>
         </div>  
           <button
@@ -204,6 +215,7 @@ const App: React.FC = () => {
 
       <NavigationBar />
     </div>
+    </AuthProvider>
   );
 };
 

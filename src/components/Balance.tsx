@@ -7,14 +7,17 @@ import { INITIAL_CREDITS } from '../config/constants';
 
 export const Balance = () => {
     return (
-        <div className='flex w-full max-w-sm items-center space-x-2'>
+        <div className='flex w-full max-w-sm items-center space-x-2 mx-auto'>
+            <div className='flex mx-auto'>
             <Input 
               readOnly
-              value={INITIAL_CREDITS}
+              value={`${INITIAL_CREDITS} ETH`}
+              className='appearence:none rounded-l-lg rounded-r-none text-neutral-700 active:none focus:none'
             />
-            <Button>
-                <Wallet />
+            <Button className='rounded-r-lg rounded-l-none  bg-mauve-500 hover:bg-mauve-200'>
+                <Wallet className='w-20' />
             </Button>
+            </div>
             {/*
         <span className='bg-mauve-500 text-white p-3.5 rounded-tl-lg rounded-bl-lg'>
             <Wallet />
