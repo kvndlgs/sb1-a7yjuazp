@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { AuthContextType, Session, User,  UserProfile, AuthResponse, ApiError } from '../types/game';
+import { AuthContextType, Session, UserProfile, AuthResponse } from '../types/auth';
+// import { supabaseClient } from '../config/supabase-client';
 
-const SUPABASE_URL = process.env.VITE_SUPABASE_URL;
-const ANON_KEY = process.env.VITE_SUPABASE_KEY;
+const SUPABASE_URL = 'https://xhzpnezbpsylxruudebb.supabase.co';
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhoenBuZXpicHN5bHhydXVkZWJiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzE3NzM5ODEsImV4cCI6MjA0NzM0OTk4MX0._UWrohhbxZBJ6mk4lQK9vOOIryio5X_pFha7ewLOD_M';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -20,7 +21,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const storedSession = localStorage.getItem('session');
       if (storedSession) {
         try {
-          const parsedSession = JSON.parse(storedSession);
+          const parsedSession = JSON.parse(storedSession) as Session;
           setSession(parsedSession);
           loadUserProfile(parsedSession.user.id);
         } catch (error) {
@@ -38,18 +39,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       const response = await fetch(`${SUPABASE_URL}/rest/v1/profiles?user_id=eq.${userId}`, {
         headers: {
-          'apiKey': ANON_KEY,
+          'apikey': ANON_KEY,
           'Authorization': `Bearer ${session?.access_token}`
         }
       });
-      if (!response.ok) throw new Error('Failed to load profile.');
+
+      if (!response.ok) throw new Error('Failed to load profile');
 
       const [profileData] = await response.json();
       if (profileData) {
         setProfile(profileData);
       }
     } catch (error) {
-      console.error('Error loading profile.', error);
+      console.error('Error loading profile:', error);
     }
   };
 
@@ -84,13 +86,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       localStorage.setItem('session', JSON.stringify(newSession));
       setSession(newSession);
+      await loadUserProfile(data.user.id);
       return { error: null };
     } catch (error) {
       return { error: error instanceof Error ? error : new Error('Unknown error occurred') };
     }
   };
 
-  const signup = async (email: string, password: string) => {
+  const signup = async (email: string, password: string, username: string) => {
     try {
       const response = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
         method: 'POST',
@@ -108,26 +111,27 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }
 
       if (!data.user) {
-        throw new Error('Invalid response from server.');
+        throw new Error('Invalid response from server');
       }
 
+      // Create user profile
       const profileResponse = await fetch(`${SUPABASE_URL}/rest/v1/profiles`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'apiKey': ANON_KEY,
+          'apikey': ANON_KEY,
           'Authorization': `Bearer ${data.access_token}`
         },
         body: JSON.stringify({
           user_id: data.user.id,
           username,
-          create_at: new Date().toISOString(),
+          created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
       });
 
       if (!profileResponse.ok) {
-        throw new Error('Failed to create user profile.');
+        throw new Error('Failed to create user profile');
       }
 
       return { error: null };
@@ -138,56 +142,57 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const updateProfile = async (data: Partial<UserProfile>) => {
     try {
-      if (!session?.user.id) throw new Error('No authenticated user.');
+      if (!session?.user.id) throw new Error('No authenticated user');
 
       const response = await fetch(`${SUPABASE_URL}/rest/v1/profiles?user_id=eq.${session.user.id}`, {
-         method: 'POST',
-         headers: {
-          'Content-Type': 'application.json',
-          'apiKey': ANON_KEY,
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': ANON_KEY,
           'Authorization': `Bearer ${session.access_token}`
-         },
-         body: JSON.stringify({
+        },
+        body: JSON.stringify({
           ...data,
           updated_at: new Date().toISOString()
-         })
+        })
       });
 
-      if (!response.ok) throw new Error('Failed to update profile.');
+      if (!response.ok) throw new Error('Failed to update profile');
 
       await loadUserProfile(session.user.id);
-      return {error: null};
+      return { error: null };
     } catch (error) {
-      return { error: error instanceof Error ? error: new Error('Failed to update profile.');
-      }
-    };
+      return { error: error instanceof Error ? error : new Error('Failed to update profile') };
+    }
+  };
 
-    const updateAvatar = async (file: File) => {
-      try {
-        if (!session?.user.id) throw new Error('No authenticated user.');
+  const updateAvatar = async (file: File) => {
+    try {
+      if (!session?.user.id) throw new Error('No authenticated user');
 
-        const formData = new FormData();
-        formData.append('file', File);
+      // Upload file
+      const formData = new FormData();
+      formData.append('file', file);
 
-        const uploadResponse = await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/{session.user.id}`, {
-          method: 'POST',
-          headers: {
-            'apiKey': ANON_KEY,
-            'Authorization': `Bearer ${session.access_token}`
-          },
-          body: formData
-        });
+      const uploadResponse = await fetch(`${SUPABASE_URL}/storage/v1/object/avatars/${session.user.id}`, {
+        method: 'POST',
+        headers: {
+          'apikey': ANON_KEY,
+          'Authorization': `Bearer ${session.access_token}`
+        },
+        body: formData
+      });
 
-        if(!uploadResponse.ok) throw new Error('Failed to upload avatar');
+      if (!uploadResponse.ok) throw new Error('Failed to upload avatar');
 
-        const url = `${SUPABASE_URL}/storage/v1/object/public/avatars/${session.user.id}`;
+      const url = `${SUPABASE_URL}/storage/v1/object/public/avatars/${session.user.id}`;
+      
+      // Update profile with new avatar URL
+      await updateProfile({ avatarUrl: url });
 
-        await updateProfile({avatarUrl: url});
-
-        return { error: null, url};
-      } catch (error) {
-        return { error: error instanceof Error ? error: new Error('Failed to update avatar.')}
-      }
+      return { error: null, url };
+    } catch (error) {
+      return { error: error instanceof Error ? error : new Error('Failed to update avatar') };
     }
   };
 

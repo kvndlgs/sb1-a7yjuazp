@@ -1,10 +1,10 @@
 import {FC, useState, ChangeEvent, FormEvent } from 'react';
-import { Alert, AlertTitle, AlertDescription } from './ui/alert';
-import { Tabs, TabsContent, TabsTrigger, TabsList } from './ui/tabs';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { Card, CardHeader, CardContent } from './ui/card';
-import { useAuth } from './AuthProvider';
+// import { Alert, AlertTitle, AlertDescription } from '../ui/alert';
+import { Tabs, TabsTrigger, TabsList } from '../ui/tabs';
+import { Input } from '../ui/input';
+import { Button } from '../ui/button';
+import { Card, CardHeader, CardContent } from '../ui/card';
+import { useAuth } from '../../context/auth-context';
 
 interface FormData {
     email: string;
@@ -18,9 +18,8 @@ type AuthMode = 'login' | 'signup';
 
 const AuthForms: FC = () => {
     const {session, login, signup } = useAuth();
-    const {profile, updateProfile, updateAvatar } = useAuth();
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string | null>(null);
+//    const [error, setError] = useState<string | null>(null);
     const [authMode, setAuthMode] = useState<AuthMode>('login');
     const [formData, setFormData] = useState<FormData>({
       email: '',
@@ -47,7 +46,7 @@ const AuthForms: FC = () => {
   
     const handleAuth = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setError(null);
+  //      setError(null);
         setLoading(true);
     
         try {
@@ -64,7 +63,7 @@ const AuthForms: FC = () => {
             if (response.error) throw response.error;
           }
         } catch (err) {
-          setError(err instanceof Error ? err.message : 'An unknown error occurred');
+  //        setError(err instanceof Error ? err.message : 'An unknown error occurred');
         } finally {
           setLoading(false);
         }
@@ -82,36 +81,7 @@ const AuthForms: FC = () => {
           </h2>
         </CardHeader>
         <CardContent>
-          {error && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-  
-          {session ? (
-            <div className="space-y-4">
-              <div className="text-center">
-                <p>Logged in as: {session.user.email}</p>
-                {profile?.username && <p>Username: {profile.username}</p>}
-                {profile?.avatar_url && (
-                  <img
-                    src={profile.avatar_url}
-                    alt="Profile"
-                    className="w-24 h-24 rounded-full mx-auto mt-4"
-                  />
-                )}
-              </div>
-              <Button
-                onClick={logout}
-                className="w-full"
-                variant="destructive"
-              >
-                Sign Out
-              </Button>
-            </div>
-          ) : (
-            <Tabs value={authMode} onValueChange={setAuthMode}>
+            <Tabs value={authMode}>
               <TabsList className="w-full mb-4">
                 <TabsTrigger value="login" className="w-full">
                   Login
@@ -153,6 +123,11 @@ const AuthForms: FC = () => {
                       accept="image/*"
                       onChange={handleFileChange}
                     />
+                    <Input
+                     type='text'
+                     placeholder='email'
+                     onChange={handleInputChange}
+                    />
                   </>
                 )}
                 <Button type="submit" className="w-full">
@@ -160,7 +135,7 @@ const AuthForms: FC = () => {
                 </Button>
               </form>
             </Tabs>
-          )}
+        
         </CardContent>
       </Card>
     );

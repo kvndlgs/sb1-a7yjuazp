@@ -4,16 +4,19 @@ import { DIFFICULTY_CONFIG } from './config/difficultyConfig';
 import { INITIAL_CREDITS, GAME_COST, DRAWN_NUMBERS } from './config/constants';
 import Grid from './components/Grid';
 import DifficultySelector from './components/DifficultySelector';
+import { AuthDialog } from './components/auth/AuthDialog';
 // import { supabase } from '@supabase/supabase-js';
 // import { PayoutTable } from './components/PayoutTable';
 import { useAudio } from './hooks/useAudio';
 import { calculatePayout } from './utils/payoutCalculator';
 import NavigationBar from './components/NavigationBar';
-import Header from './components/Header';
+import { Header } from './components/Header';
 import { BetHistoryTable } from './components/BetTable';
-import { AuthProvider } from './components/AuthProvider';
+import { AuthProvider, useAuth } from './context/auth-context';
+
 
 const App: React.FC = () => {
+
 
   const [gameState, setGameState] = useState<GameState>({
     difficulty: 'medium',
@@ -22,9 +25,16 @@ const App: React.FC = () => {
     credits: INITIAL_CREDITS,
     isPlaying: false,
     gameResult: null,
+    bet: 0,
+    balance: 0
   });
 
+
+
+
   const { playSound } = useAudio();
+
+
  
   const handleDifficultyChange = (difficulty: DifficultyLevel) => {
     setGameState((prev) => ({
@@ -119,11 +129,12 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
     <div className="min-h-screen min-w-screen m-0 bg-[#373342] text-white">
+
       <Header />
       <div className='flex flex-col'>
       <div className="max-w-4xl mx-auto space-y-2">
         <div className="flex justify-between items-start">
-          <div className="space-y-4">
+          <div className="space-y-2">
             <DifficultySelector
               selectedDifficulty={gameState.difficulty}
               onSelect={handleDifficultyChange}
@@ -160,7 +171,7 @@ const App: React.FC = () => {
           />
           */}
         </div>
-        <div className="flex justify-center gap-4">
+        <div className="flex justify-center gap-4 py-6">
        
        <div className='flex flex-col'>
         <label> Bet </label>
