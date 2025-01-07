@@ -1,3 +1,8 @@
+export interface DialogContextType {
+  openDialog: () => void;
+  closeDialog: () => void;
+}
+
 export type DifficultyLevel = 'classic' | 'low' | 'medium' | 'high';
 
 export interface DifficultyConfig {

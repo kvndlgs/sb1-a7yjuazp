@@ -5,6 +5,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Card, CardHeader, CardContent } from '../ui/card';
 import { useAuth } from '../../context/auth-context';
+import { DialogProvider } from '../../components/DialogProvider';
 
 interface FormData {
     email: string;
@@ -17,6 +18,7 @@ type AuthMode = 'login' | 'signup';
 
 
 const AuthForms: FC = () => {
+
     const {session, login, signup } = useAuth();
     const [loading, setLoading] = useState<boolean>(false);
 //    const [error, setError] = useState<string | null>(null);
@@ -74,6 +76,7 @@ const AuthForms: FC = () => {
     }
   
     return (
+      <DialogProvider>
       <Card className="w-full max-w-md mx-auto">
         <CardHeader>
           <h2 className="text-2xl font-bold text-center">
@@ -138,6 +141,7 @@ const AuthForms: FC = () => {
         
         </CardContent>
       </Card>
+      </DialogProvider>
     );
 };
 

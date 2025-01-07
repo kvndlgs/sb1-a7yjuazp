@@ -4,7 +4,6 @@ import { DIFFICULTY_CONFIG } from './config/difficultyConfig';
 import { INITIAL_CREDITS, GAME_COST, DRAWN_NUMBERS } from './config/constants';
 import Grid from './components/Grid';
 import DifficultySelector from './components/DifficultySelector';
-import { AuthDialog } from './components/auth/AuthDialog';
 // import { supabase } from '@supabase/supabase-js';
 // import { PayoutTable } from './components/PayoutTable';
 import { useAudio } from './hooks/useAudio';
@@ -12,7 +11,9 @@ import { calculatePayout } from './utils/payoutCalculator';
 import NavigationBar from './components/NavigationBar';
 import { Header } from './components/Header';
 import { BetHistoryTable } from './components/BetTable';
-import { AuthProvider, useAuth } from './context/auth-context';
+import {DialogProvider} from './components/DialogProvider';
+import { AuthProvider } from './context/auth-context';
+import AuthForms from './components/auth/Auth';
 
 
 const App: React.FC = () => {
@@ -128,6 +129,7 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
+    <DialogProvider>
     <div className="min-h-screen min-w-screen m-0 bg-[#373342] text-white">
 
       <Header />
@@ -226,6 +228,8 @@ const App: React.FC = () => {
 
       <NavigationBar />
     </div>
+     <AuthForms />
+     </DialogProvider>
     </AuthProvider>
   );
 };
