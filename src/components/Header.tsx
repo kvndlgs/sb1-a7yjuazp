@@ -2,29 +2,42 @@ import Logo from './Logo';
 import { FC } from 'react'; 
 import { Balance } from './Balance';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Button } from './ui/button';
 import { useAuth } from '../context/auth-context';
-import { useDialog } from './DialogProvider'; 
+import { DialogProvider, useDialog } from './DialogProvider'; 
 
 export const Header: FC = () => {
 
 const { session } = useAuth();
 const { openDialog } = useDialog();
     return (
+        <DialogProvider>
         <div className='bg-[#4B455C] w-full h-[80px] flex justify-between items-center z-50 px-3 shadow-lg'>
             <Logo />
         {session ? (
             <>
            <Balance />
             <div>
+                <Popover>
+                    <PopoverTrigger>
                 <button>
                     <Avatar>
-                     <AvatarImage src='./default-avatar.png' /> 
+                     <AvatarImage src='../src/components/default-avatar.png' /> 
                      <AvatarFallback>ST</AvatarFallback>
                     </Avatar>
                 </button>
+                </PopoverTrigger>
+                <PopoverContent>
+                <div className='flex flex-col gap-3'>
+                    <div> <a href='/auth/user-profile'> Profile </a></div>
+                    <div> <a href='/'> Transactions </a></div>
+                    <div> <a href='/'> Bonus </a></div>
+                    <div><Button>Sign Out</Button></div>
+                </div>
+                </PopoverContent>
+                </Popover>
             </div>
-            <Button> Signout </Button>
             </>
        ) : (
             
@@ -40,5 +53,6 @@ const { openDialog } = useDialog();
             </div>
        )}
         </div>
+        </DialogProvider>
     );
 }

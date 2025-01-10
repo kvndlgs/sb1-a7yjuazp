@@ -1,15 +1,30 @@
-import { FC, useState, ChangeEvent, FormEvent } from 'react';
-import { Card, CardHeader, CardContent } from '../ui/card';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Alert, AlertTitle, AlertDescription } from '../ui/alert';
+import { FC, useState, FormEvent } from 'react';
+import { Card, CardHeader, CardContent } from '../../components/ui/card';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
+//import { Alert, AlertTitle, AlertDescription } from '../../components/ui/alert';
 import { useAuth } from '../../context/auth-context';
+//import { supabaseClient } from '../../config/supabase-client';
 
-const Profile: FC = () => {
+const UserProfile: FC = () => {
   const { profile, updateProfile, updateAvatar } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [username, setUsername] = useState(profile?.username || '');
+  const [avatarUrl, setAvatarAvatarUrl] = useState(profile?.avatarUrl || '');
+
+  const handleAvatarSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const { error } = await updateAvatar({ avatarUrl });
+
+    if (error) {
+        setError(error.message);
+    }
+    setLoading(false);
+  }
 
   const handleUsernameSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -25,21 +40,6 @@ const Profile: FC = () => {
     setLoading(false);
   };
 
-  const handleAvatarChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setLoading(true);
-    setError(null);
-
-    const { error, url } = await updateAvatar(file);
-    
-    if (error) {
-      setError(error.message);
-    }
-    
-    setLoading(false);
-  };
 
   if (!profile) {
     return null;
@@ -51,15 +51,11 @@ const Profile: FC = () => {
         <h2 className="text-2xl font-bold">Your Profile</h2>
       </CardHeader>
       <CardContent>
-        {error && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+      
+        
 
         <div className="space-y-6">
-          {profile.avatarUrl && (
+
             <div className="flex justify-center">
               <img
                 src={profile.avatarUrl}
@@ -67,16 +63,22 @@ const Profile: FC = () => {
                 className="w-24 h-24 rounded-full"
               />
             </div>
-          )}
 
-          <div>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={handleAvatarChange}
-              disabled={loading}
-            />
-          </div>
+            <div>
+              <form onSubmit={handleAvatarSubmit}>
+              <Input
+                type="file"
+                accept="image/*"
+                disabled={loading}
+              />
+              <Button type='submit' disabled={loading} className='w-full'>
+                  {loading ? 'Loading' : 'Update Avatar' }
+              </Button>
+              </form>
+            </div>
+            
+        
+          
 
           <form onSubmit={handleUsernameSubmit} className="space-y-4">
             <Input
@@ -87,7 +89,7 @@ const Profile: FC = () => {
               disabled={loading}
             />
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Updating...' : 'Update Profile'}
+              {loading ? 'Updating...' : 'Update Username'}
             </Button>
           </form>
         </div>
@@ -96,4 +98,4 @@ const Profile: FC = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

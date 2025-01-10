@@ -42,9 +42,6 @@ export const DialogProvider: FC<DialogProviderProps> = ({children}) => {
     return (
         <DialogContext.Provider value={value}>
             <Dialog open={open} onOpenChange={setOpen}>
-                <DialogHeader><DialogTrigger>x</DialogTrigger></DialogHeader>
-                <DialogTitle> Yo </DialogTitle>
-                <DialogDescription> A lil ahh description</DialogDescription>
                 { children }
             </Dialog>
         </DialogContext.Provider>

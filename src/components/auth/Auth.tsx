@@ -3,9 +3,9 @@ import {FC, useState, ChangeEvent, FormEvent } from 'react';
 import { Tabs, TabsTrigger, TabsList } from '../ui/tabs';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { Card, CardHeader, CardContent } from '../ui/card';
+import { Card, CardContent } from '../ui/card';
 import { useAuth } from '../../context/auth-context';
-import { DialogProvider } from '../../components/DialogProvider';
+
 
 interface FormData {
     email: string;
@@ -52,11 +52,11 @@ const AuthForms: FC = () => {
         setLoading(true);
     
         try {
-          const { email, password } = formData;
+          const { email, password, username } = formData;
           let response;
     
           if (authMode === 'signup') {
-            response = await signup(email, password);
+            response = await signup(email, password, username);
             if (response.error) throw response.error;
             // Handle successful signup
             setAuthMode('login');
@@ -75,16 +75,12 @@ const AuthForms: FC = () => {
       return <div className="flex justify-center p-4">Loading...</div>;
     }
   
-    return (
-      <DialogProvider>
+
+      if (!session) return (
+
       <Card className="w-full max-w-md mx-auto">
-        <CardHeader>
-          <h2 className="text-2xl font-bold text-center">
-            {session ? 'Your Profile' : 'Welcome'}
-          </h2>
-        </CardHeader>
         <CardContent>
-            <Tabs value={authMode}>
+            <Tabs value={authMode} defaultValue='signup'>
               <TabsList className="w-full mb-4">
                 <TabsTrigger value="login" className="w-full">
                   Login
@@ -93,7 +89,6 @@ const AuthForms: FC = () => {
                   Sign Up
                 </TabsTrigger>
               </TabsList>
-  
               <form onSubmit={handleAuth} className="space-y-4">
                 <Input
                   type="email"
@@ -117,9 +112,7 @@ const AuthForms: FC = () => {
                       type="text"
                       name="username"
                       placeholder="Username"
-                      value={formData.username}
                       onChange={handleInputChange}
-                      required
                     />
                     <Input
                       type="file"
@@ -140,9 +133,8 @@ const AuthForms: FC = () => {
             </Tabs>
         
         </CardContent>
-      </Card>
-      </DialogProvider>
-    );
+      </Card>);
+      
 };
 
 export default AuthForms;

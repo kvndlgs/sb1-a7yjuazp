@@ -1,5 +1,5 @@
 // import React from 'react';
-import { Dices, Coins } from 'lucide-react';
+import { Coins } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 //import { BetHistory } from '../types/game';
 
@@ -7,6 +7,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from './ui/tabs';
 const fakeBets = {
     allBets: [
     {
+        id: 0,
         game: 'Keno',
         time: '13:46:22',
         user: 'Bred Sheeran',
@@ -15,6 +16,7 @@ const fakeBets = {
         result: '$0'
     },
     {
+        id: 1,
         game: 'Keno',
         time: '13:46:29',
         user: 'Bred Sheeran',
@@ -23,6 +25,7 @@ const fakeBets = {
         result: '$0'
     },
     {
+        id: 2,
         game: 'Dice',
         time: '13:47:11',
         user: 'Niga nig',
@@ -31,6 +34,8 @@ const fakeBets = {
         result: '$20'
     },
     {
+
+        id:3,
         game: 'Keno',
         time: '13:47:28',
         user: 'Bred Sheeran',
@@ -39,6 +44,7 @@ const fakeBets = {
         result: '$1000'
     },
     {
+        id: 4,
         game: 'Keno',
         time: '13:47:30',
         user: 'Bred Sheeran',
@@ -47,6 +53,7 @@ const fakeBets = {
         result: '$0'
     },
     {
+        id: 5,
         game: 'Dice',
         time: '13:47:32',
         user: 'Niga nig',
@@ -55,6 +62,7 @@ const fakeBets = {
         result: '$0'
     },
     {
+        id: 6,
         game: 'Keno',
         time: '13:48:34',
         user: 'Bred Sheeran',
@@ -65,6 +73,7 @@ const fakeBets = {
     ],
     userBets: [
         {
+            id: 0,
             game: 'Keno',
             time: '13:46:22',
             user: 'Bred Sheeran',
@@ -73,6 +82,7 @@ const fakeBets = {
             result: '$0'
         },
         {
+            id: 1,
             game: 'Keno',
             time: '13:46:29',
             user: 'Bred Sheeran',
@@ -81,6 +91,7 @@ const fakeBets = {
             result: '$0'
         },
         {
+            id: 2,
             game: 'Keno',
             time: '13:47:28',
             user: 'Bred Sheeran',
@@ -89,6 +100,7 @@ const fakeBets = {
             result: '$1000'
         },
         {
+            id: 3,
             game: 'Keno',
             time: '13:47:30',
             user: 'Bred Sheeran',
@@ -97,6 +109,7 @@ const fakeBets = {
             result: '$0'
         },
         {
+            id: 4,
             game: 'Keno',
             time: '13:48:34',
             user: 'Bred Sheeran',
@@ -107,6 +120,7 @@ const fakeBets = {
     ],
     bigBets: [
         {
+            id: 0,
             game: 'Keno',
             time: '13:46:22',
             user: 'Bred Sheeran',
@@ -115,6 +129,7 @@ const fakeBets = {
             result: '$500'
         },
         {
+            id: 1,
             game: 'Keno',
             time: '13:46:29',
             user: 'Bred Sheeran',
@@ -122,6 +137,7 @@ const fakeBets = {
             result: '$0'
         },
         {
+            id: 2,
             game: 'Keno',
             time: '13:47:28',
             user: 'Bred Sheeran',
@@ -130,6 +146,7 @@ const fakeBets = {
             result: '$1000'
         },
         {
+            id: 3,
             game: 'Keno',
             time: '13:47:30',
             multiplier: 'X2.000',
@@ -138,6 +155,7 @@ const fakeBets = {
             result: '$0'
         },
         {
+            id: 4,
             game: 'Keno',
             time: '13:48:34',
             user: 'Bred Sheeran',
@@ -182,7 +200,7 @@ export const BetHistoryTable = () => {
             <div>
             {
                     fakeBets.allBets.map((bet) => (
-                        <div className='flex items-center justify-between rounded-lg px-5 py-3 bg-neutral-700 my-2 mx-2'>
+                        <div key={bet.id} className='flex items-center justify-between rounded-lg px-5 py-3 bg-neutral-700 my-2 mx-2'>
                             <div>{ bet.game }</div>
                             <div className='md:flex hidden'>{bet.time} </div>
                             <div> { bet.user } </div>
@@ -208,7 +226,7 @@ export const BetHistoryTable = () => {
             <div>
             {
                     fakeBets.userBets.map((bet) => (
-                        <div className='flex items-center justify-between rounded-lg px-5 py-3 bg-neutral-700 my-2 mx-2'>
+                        <div key={bet.id} className='flex items-center justify-between rounded-lg px-5 py-3 bg-neutral-700 my-2 mx-2'>
                             <div>{ bet.game }</div>
                             <div className='md:flex hidden'>{bet.time} </div>
                             <div> { bet.user } </div>
@@ -220,7 +238,7 @@ export const BetHistoryTable = () => {
                 }
             </div>
             </TabsContent>
-            <TabsContent value='high-rolls'>
+            <TabsContent value='rare-wins'>
             <div>
                 <div className='w-full flex items-center justify-between py-2 px-5'>
                     <div className='text-neutral-300 font-bold text-sm md:text-md'> GAME </div>
@@ -234,7 +252,7 @@ export const BetHistoryTable = () => {
             <div>
             {
                     fakeBets.bigBets.map((bet) => (
-                        <div className='flex items-center justify-between rounded-lg px-5 py-3 bg-neutral-700 my-2 mx-2'>
+                        <div key={bet.id} className='flex items-center justify-between rounded-lg px-5 py-3 bg-neutral-700 my-2 mx-2'>
                             <div>{ bet.game }</div>
                             <div className='md:flex hidden'>{bet.time} </div>
                             <div> { bet.user } </div>

@@ -11,7 +11,6 @@ import { calculatePayout } from './utils/payoutCalculator';
 import NavigationBar from './components/NavigationBar';
 import { Header } from './components/Header';
 import { BetHistoryTable } from './components/BetTable';
-import {DialogProvider} from './components/DialogProvider';
 import { AuthProvider } from './context/auth-context';
 import AuthForms from './components/auth/Auth';
 
@@ -129,7 +128,6 @@ const App: React.FC = () => {
 
   return (
     <AuthProvider>
-    <DialogProvider>
     <div className="min-h-screen min-w-screen m-0 bg-[#373342] text-white">
 
       <Header />
@@ -229,7 +227,6 @@ const App: React.FC = () => {
       <NavigationBar />
     </div>
      <AuthForms />
-     </DialogProvider>
     </AuthProvider>
   );
 };

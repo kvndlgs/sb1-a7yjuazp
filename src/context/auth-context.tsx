@@ -93,7 +93,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
-  const signup = async (email: string, password: string, username: string) => {
+  const signup = async (email: string, password: string) => {
     try {
       const response = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
         method: 'POST',
@@ -124,7 +124,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         },
         body: JSON.stringify({
           user_id: data.user.id,
-          username,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })

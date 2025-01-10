@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { INITIAL_CREDITS } from '../config/constants';
 
 
+
 export const Balance = () => {
     return (
         <div className='flex w-full max-w-sm items-center space-x-2 mx-auto'>
